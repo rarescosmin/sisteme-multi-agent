@@ -1,13 +1,16 @@
 package my;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 import base.Action;
+import base.Environment;
 import base.Perceptions;
 import gridworld.AbstractGridEnvironment;
 import gridworld.GridOrientation;
+import gridworld.GridPosition;
 import gridworld.GridRelativeOrientation;
 
 /**
@@ -128,8 +131,66 @@ public class MyEnvironment extends AbstractGridEnvironment
 	@Override
 	public void step()
 	{
+
 		// TODO Auto-generated method stub
 		// this should iterate through all agents, provide them with perceptions, and apply the
 		// action they return.
+
+		List<GridAgentData> agentDataList = getAgentsData();
+		if (agentDataList == null || agentDataList.isEmpty()) throw new RuntimeException("Invalid Agents data. Please run again.");
+
+		Set<GridPosition> Jtiles;
+		Set<GridPosition> Xtiles;
+
+		for (GridAgentData gridAgentData : agentDataList) {
+			boolean isOverJtile = false;
+			Set<GridRelativeOrientation> obstacles = new HashSet<>();
+
+			// get agent position
+			GridPosition agentPosition = gridAgentData.getPosition();
+			System.out.println("Agent position: [X, Y] = " + agentPosition.toString());
+
+			// get agent orientation
+			GridOrientation agentOrientation = gridAgentData.getOrientation();
+			System.out.println("Agent orientation: " + agentOrientation.toString());
+
+			// initialize Jtiles information
+			Jtiles = getJtiles();
+			if (Jtiles == null || Jtiles.isEmpty()) throw new RuntimeException("Invalid Jtiles data. Please run again.");
+
+			// check if agent is over Jtile
+			for (GridPosition Jtile : Jtiles) {
+				if (agentPosition.getDistanceTo(Jtile) == 0) {
+					System.out.println("Agent is on top of Jtile");
+					isOverJtile = true;
+				}
+			}
+
+			// initialize Xtiles information
+			Xtiles = getXtiles();
+			if (Xtiles == null || Xtiles.isEmpty()) throw new RuntimeException("Invalid Xtiles data. Please run again.");
+
+			// compute neighbor positions
+			Set<GridPosition> neighbours = new HashSet<>();
+			for (GridRelativeOrientation gridRelativeOrientation : GridRelativeOrientation.values()) {
+				neighbours.add(agentPosition.getNeighborPosition(agentOrientation, gridRelativeOrientation));
+			}
+
+			// iterate over Xtiles and neighbours
+			// check if Xtile is among neighbour
+			// if yes -> add relative(to agent position) position of neighbour to obstacles
+			for (GridPosition Xtile : Xtiles) {
+				for (GridPosition neighbour : neighbours) {
+					if (Xtile.getDistanceTo(neighbour) == 0) {
+						obstacles.add(agentPosition.getRelativeOrientation(neighbour));
+					}
+				}
+			}
+
+			MyAgentPerceptions myAgentPerceptions = new MyAgentPerceptions(obstacles, isOverJtile, agentOrientation);
+
+			MyAction action = (MyAction) gridAgentData.getAgent().response(myAgentPerceptions);
+
+		}
 	}
 }
