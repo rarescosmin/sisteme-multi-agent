@@ -190,7 +190,7 @@ public class MyEnvironment extends AbstractGridEnvironment
 			MyAction action = (MyAction) gridAgentData.getAgent().response(myAgentPerceptions);
 			switch (action) {
 				case PICK: cleanTile(agentPosition);
-					break;
+				break;
 
 				case FORWARD: {
 					switch (agentOrientation) {
@@ -200,8 +200,8 @@ public class MyEnvironment extends AbstractGridEnvironment
 						case WEST: gridAgentData.setPosition(new GridPosition(agentPosition.getX() - 1, agentPosition.getY())); break;
 						default: break;
 					}
-				};
-					break;
+				}
+				break;
 
 				case TURN_RIGHT: {
 					switch (agentOrientation) {
@@ -212,6 +212,7 @@ public class MyEnvironment extends AbstractGridEnvironment
 						default: break;
 					}
 				}
+				break;
 
 				default: break;
 			}
