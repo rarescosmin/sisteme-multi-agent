@@ -154,7 +154,7 @@ public class MyEnvironment extends AbstractGridEnvironment
 
 			// initialize Jtiles information
 			Jtiles = getJtiles();
-			if (Jtiles == null || Jtiles.isEmpty()) throw new RuntimeException("Invalid Jtiles data. Please run again.");
+			if (Jtiles == null || Jtiles.isEmpty()) return;
 
 			// check if agent is over Jtile
 			for (GridPosition Jtile : Jtiles) {
