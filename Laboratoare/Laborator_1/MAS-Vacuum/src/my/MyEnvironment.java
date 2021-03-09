@@ -1,17 +1,16 @@
 package my;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
 import base.Action;
-import base.Environment;
 import base.Perceptions;
 import gridworld.AbstractGridEnvironment;
 import gridworld.GridOrientation;
 import gridworld.GridPosition;
 import gridworld.GridRelativeOrientation;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * Your implementation of the environment in which cleaner agents work.
@@ -129,8 +128,7 @@ public class MyEnvironment extends AbstractGridEnvironment
 	}
 	
 	@Override
-	public void step()
-	{
+	public void step() {
 
 		// TODO Auto-generated method stub
 		// this should iterate through all agents, provide them with perceptions, and apply the
@@ -190,6 +188,33 @@ public class MyEnvironment extends AbstractGridEnvironment
 			MyAgentPerceptions myAgentPerceptions = new MyAgentPerceptions(obstacles, isOverJtile, agentOrientation);
 
 			MyAction action = (MyAction) gridAgentData.getAgent().response(myAgentPerceptions);
+			switch (action) {
+				case PICK: cleanTile(agentPosition);
+					break;
+
+				case FORWARD: {
+					switch (agentOrientation) {
+						case NORTH: gridAgentData.setPosition(new GridPosition(agentPosition.getX(), agentPosition.getY() + 1)); break;
+						case EAST: gridAgentData.setPosition(new GridPosition(agentPosition.getX() + 1, agentPosition.getY())); break;
+						case SOUTH: gridAgentData.setPosition(new GridPosition(agentPosition.getX(), agentPosition.getY() - 1)); break;
+						case WEST: gridAgentData.setPosition(new GridPosition(agentPosition.getX() - 1, agentPosition.getY())); break;
+						default: break;
+					}
+				};
+					break;
+
+				case TURN_RIGHT: {
+					switch (agentOrientation) {
+						case NORTH: gridAgentData.setOrientation(GridOrientation.EAST); break;
+						case EAST: gridAgentData.setOrientation(GridOrientation.SOUTH); break;
+						case SOUTH: gridAgentData.setOrientation(GridOrientation.WEST); break;
+						case WEST: gridAgentData.setOrientation(GridOrientation.NORTH); break;
+						default: break;
+					}
+				}
+
+				default: break;
+			}
 
 		}
 	}

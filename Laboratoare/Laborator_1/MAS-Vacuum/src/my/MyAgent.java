@@ -3,6 +3,7 @@ package my;
 import base.Action;
 import base.Agent;
 import base.Perceptions;
+import gridworld.GridRelativeOrientation;
 
 /**
  * Your implementation of a reactive cleaner agent.
@@ -14,8 +15,18 @@ public class MyAgent implements Agent
 	@Override
 	public Action response(Perceptions perceptions)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		MyEnvironment.MyAgentPerceptions percept = (MyEnvironment.MyAgentPerceptions) perceptions;
+		System.out.println("Agent sees current tile is " + (percept.isOverJtile() ? "dirty" : "clean")
+				+ "; current orientation is " + percept.getAbsoluteOrientation() + "; obstacles at: "
+				+ percept.getObstacles());
+		// // clean
+		if(percept.isOverJtile())
+			return MyEnvironment.MyAction.PICK;
+		// // turn
+		if(percept.getObstacles().contains(GridRelativeOrientation.FRONT))
+			return MyEnvironment.MyAction.TURN_RIGHT;
+		// forward
+		return MyEnvironment.MyAction.FORWARD;
 	}
 	
 	@Override
