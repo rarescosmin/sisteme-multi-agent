@@ -174,14 +174,11 @@ public class MyEnvironment extends AbstractGridEnvironment
 				neighbours.add(agentPosition.getNeighborPosition(agentOrientation, gridRelativeOrientation));
 			}
 
-			// iterate over Xtiles and neighbours
-			// check if Xtile is among neighbour
-			// if yes -> add relative(to agent position) position of neighbour to obstacles
-			for (GridPosition Xtile : Xtiles) {
-				for (GridPosition neighbour : neighbours) {
-					if (Xtile.getDistanceTo(neighbour) == 0) {
-						obstacles.add(agentPosition.getRelativeOrientation(neighbour));
-					}
+			// check if neighbours are among Xtiles
+			// if yes -> add to obstacle array
+			for (GridPosition neighbour : neighbours) {
+				if (Xtiles.contains(neighbour)) {
+					obstacles.add(agentPosition.getRelativeOrientation(agentOrientation, neighbour));
 				}
 			}
 
@@ -214,8 +211,20 @@ public class MyEnvironment extends AbstractGridEnvironment
 				}
 				break;
 
+				case TURN_LEFT: {
+					switch (agentOrientation) {
+						case NORTH: gridAgentData.setOrientation(GridOrientation.WEST); break;
+						case EAST: gridAgentData.setOrientation(GridOrientation.NORTH); break;
+						case SOUTH: gridAgentData.setOrientation(GridOrientation.EAST); break;
+						case WEST: gridAgentData.setOrientation(GridOrientation.SOUTH); break;
+						default: break;
+					}
+				}
+				break;
+
 				default: break;
 			}
+
 
 		}
 	}
